@@ -33,3 +33,5 @@ cd cloud_platform; ./cloud-platform-services create
 			```
 		    curl -X GET 'http://localhost:1026/v2/entities/010203060708?type=Native&options=keyValues' -H 'fiware-service: school' -H 'fiware-servicepath: /fd00' | python -m json.tool
 		    ```
+
+<img src="https://github.com/norisjunior/LWPubSub/blob/master/img/LWPubSub.png" alt=Steps above mentioned" width="1024">
