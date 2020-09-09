@@ -15,17 +15,21 @@ This repository contains:
 cd cloud_platform; ./cloud-platform-services create
 ```
 
-## Running a basic example
+## Running a basic example with native Contiki-NG target (simulated IoT device)
 * Using 'terminator' (on Ubuntu: apt-get install terminator):
 	- Open 5 "sub-terminals":
-		- 1st for cloud-platform commands
+		- 1st for cloud-platform commands (start and provision device)
 			- Inside 'cloud_platform/' directory, execute: ``` ./cloud-platform-services start ```
-		- 2nd for mosquitto_sub (view all specific MQTT messages)
-			- Execute: ``` mosquitto_sub -h test.mosquitto.org -t '/99/#' -v ```
-		- 3th on Raspberry Pi IoT device execute (inside 'LWPubSub_Rasp_application/' directory)
-			- Previously it is necessary to provision the deviceID on the cloud platform (you can modify the clientID variable to use our value on the tests: 0012eb00f6d0 or 0012e3034d8c)
-			- Execute: ```python lwpubsub-standalone.py CBC 256 test.mosquitto.org ```
-		- 4th to check delivered MQTT messages to the cloud platform
+      - After, run: ``` ./new-provisioning.sh ``` to provision the CWIoT (Sensortag, Remote, Native)
+		- 2nd for local MQTT Broker - use mosquitto_sub (view all specific MQTT messages)
+			- Execute: ``` mosquitto_sub -t "#" -v ```
+		- 3th to check IoT Agent messages:
+			- Execute: ``` ./view_logs.sh ```
+    - 4th to run the device:
+      - Native target simulates the CWIoT. It is required to insert the ``` lwpubsub_system ``` inside the ``` examples/ ``` folder of Contiki-NG (we use the version 4.4)
+      - After installing Contiki-NG, we need to compile the code, running ``` ./make_lwpubsub_native-cloud_cwiot.sh ```
+      - Then execute: ``` sudo ./lwsec-pubsub-system.native ```
+		- 5th to check delivered MQTT messages to the cloud platform
 			```
-		    curl -X GET 'http://localhost:1026/v2/entities/0012eb00f6d0?type=Raspberry&options=keyValues' -H 'fiware-service: school' -H 'fiware-servicepath: /fd00' | python -m json.tool
+		    curl -X GET 'http://localhost:1026/v2/entities/010203060708?type=Native&options=keyValues' -H 'fiware-service: school' -H 'fiware-servicepath: /fd00' | python -m json.tool
 		    ```
