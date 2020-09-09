@@ -32,4 +32,4 @@ fi
 
 make distclean
 
-make TARGET=zoul BOARD=remote-revb PORT=/dev/ttyUSB1 MAKE_KEYSIZE="$2" MAKE_CRYPTOMODE="$1" MAKE_WITH_ENERGY=1 lwsec-pubsub-system.upload
+make TARGET=zoul BOARD=remote-revb PORT=/dev/ttyUSB1 MAKE_KEYSIZE="$2" MAKE_CRYPTOMODE="$1" MAKE_WITH_ENERGY=1  MAKE_POLLFREQUENCY="HIGH" lwsec-pubsub-system.upload
