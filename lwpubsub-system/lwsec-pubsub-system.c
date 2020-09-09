@@ -208,11 +208,6 @@ static uint8_t state;
 #define DEFAULT_PUBLISH_INTERVAL    (LWPUBSUB_POLLFREQUENCY * CLOCK_SECOND)
 
 #define DEFAULT_KEEP_ALIVE_TIMER    14400
-// #if (LWPUBSUB_POLLFREQUENCY >= 14400)
-//   #define DEFAULT_KEEP_ALIVE_TIMER    (65535)
-// #else
-//   #define DEFAULT_KEEP_ALIVE_TIMER    (LWPUBSUB_POLLFREQUENCY * 6)
-// #endif
 
 #define DEFAULT_RSSI_MEAS_INTERVAL  (CLOCK_SECOND * 30)
 /*---------------------------------------------------------------------------*/
@@ -404,6 +399,8 @@ static void decrypt_ctr(uint8_t *AESkey, uint8_t *ciphered, uint8_t *iniv, int s
 
 //#endif /* DEFINING_ENCRIPTION_FUNCTION */
 
+//LWPubSub - AES Keys -- DEFINE YOUR OWN KEYS!
+
 // static uint8_t lwpubsub_aes128_key[16] = {0x4e, 0x6f, 0x72, 0x69, 0x73, 0x50, 0x41, 0x44, 0x50, 0x6f, 0x6c, 0x69, 0x55, 0x53, 0x50, 0x21}; //AES 128 Key
 // static uint8_t lwpubsub_aes192_key[24] = {0x4e, 0x6f, 0x72, 0x69, 0x73, 0x4a, 0x75, 0x6e, 0x69, 0x6f, 0x72, 0x50, 0x41, 0x44, 0x4c, 0x53, 0x49, 0x50, 0x6f, 0x6c, 0x69, 0x55, 0x53, 0x50}; //AES 192 Key
 // static uint8_t lwpubsub_aes256_key[36] = {0x4e, 0x6f, 0x72, 0x69, 0x73, 0x4a, 0x75, 0x6e, 0x69, 0x6f, 0x72, 0x50, 0x41, 0x44, 0x4c, 0x53, 0x49, 0x50, 0x6f, 0x6c, 0x69, 0x74, 0x65, 0x63, 0x6e, 0x69, 0x63, 0x61, 0x55, 0x53, 0x50, 0x21}; // AES 256 Key
@@ -418,16 +415,6 @@ static void decrypt_ctr(uint8_t *AESkey, uint8_t *ciphered, uint8_t *iniv, int s
   static uint8_t lwpubsub_aes_key[1] = {0};
 #endif /* lwpubsub_aes_key */
 
-//LWPubSub - AES Keys -- DEFINE YOUR OWN KEYS!
-// #if defined (AES128)
-//   static uint8_t lwpubsub_aes_key[KEYSIZE/8] = {0x4e, 0x6f, 0x72, 0x69, 0x73, 0x50, 0x41, 0x44, 0x50, 0x6f, 0x6c, 0x69, 0x55, 0x53, 0x50, 0x21}; //AES 128 Key
-// #elif defined (AES192)
-//   static uint8_t lwpubsub_aes_key[KEYSIZE/8] = {0x4e, 0x6f, 0x72, 0x69, 0x73, 0x4a, 0x75, 0x6e, 0x69, 0x6f, 0x72, 0x50, 0x41, 0x44, 0x4c, 0x53, 0x49, 0x50, 0x6f, 0x6c, 0x69, 0x55, 0x53, 0x50}; //AES 192 Key
-// #elif defined (AES256)
-//   static uint8_t lwpubsub_aes_key[KEYSIZE/8] = {0x4e, 0x6f, 0x72, 0x69, 0x73, 0x4a, 0x75, 0x6e, 0x69, 0x6f, 0x72, 0x50, 0x41, 0x44, 0x4c, 0x53, 0x49, 0x50, 0x6f, 0x6c, 0x69, 0x74, 0x65, 0x63, 0x6e, 0x69, 0x63, 0x61, 0x55, 0x53, 0x50, 0x21}; // AES 256 Key
-// #else
-//   static uint8_t lwpubsub_aes_key[1] = {0};
-// #endif /* lwpubsub_aes_key */
 
 /************************ SECURITY FUNCTIONS *********************************/
 /*---------------------------------------------------------------------------*/
@@ -484,12 +471,6 @@ static void parsePayload(uint8_t* mqttPayload, int mqttPayload_len)
   commandReceived[0] = metadata[6];
 
 }
-
-
-
-
-
-
 
 
 /*---------------------------------------------------------------------------*/
@@ -848,7 +829,7 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
   }
 
   if(strncmp(&topic[17], "cmd", 3) == 0) {
-    //We accept only cmd last topic part
+    //We accept only cmd in the last topic part
 
     #if (LOG_LEVEL == LOG_LEVEL_DBG)
       LOG_DBG("Received message - Chunk: "); dump((uint8_t *)chunk, chunk_len); printf("\n");
@@ -957,7 +938,7 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
 
 //3311 - Start
     if(strncmp(objectID, "3311", 4) == 0) { //IPSO Light Control
-      if(strncmp(instanceID, "0", 1) == 0) { //LED vermelho
+      if(strncmp(instanceID, "0", 1) == 0) { //red LED
         if(strncmp(commandReceived, "1", 1) == 0) {
           LOG_INFO("CommandReceived type execute - red led (3311 0)\n");
           printf("\n> RED Led On <\n\n");
@@ -969,7 +950,7 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
         } else {
           LOG_ERR("--Wrong command--\n");
         }
-      } else if(strncmp(instanceID, "1", 1) == 0) { //LED verde {
+      } else if(strncmp(instanceID, "1", 1) == 0) { //green LED {
 
         if(strncmp(commandReceived, "1", 1) == 0) {
           LOG_INFO("CommandReceived type execute - green led (3311 1)\n");
@@ -1035,8 +1016,6 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
     }
 //IPSO 3311 and 3338 devices end
 
-/* PENSAR!!!! Não mostrar energia de um commandReceived finish quando vi, porque no mqtt.c já tem um Publish finish
-   Na análise do log observar pelo Publish finish e não commandReceived finish */
 #if (ENERGEST_CONF_ON == 1)
     energest_flush();
     LOG_INFO("CommandReceived finish ");
