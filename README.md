@@ -1,7 +1,7 @@
 # LWPubSub
 LightWeight, energy-efficient, and end-to-end secure Publish-Subscribe system based on MQTT (LWPubSub)
 
-Application code for the paper submitted to the Computers & Security journal
+Application code of the paper: "Junior, N., Silva, A., Guelﬁ, A., Azevedo, M., & Kofuji, S. (2021). Lightweight and Secure Publish-Subscribe System for Cloud-Connected Ultra Low Power IoT Devices. Journal of Communication and Information Systems, 36(1), 110–113. https://doi.org/10.14209/jcis.2021.11"
 
 This repository contains:
   - LWPubSub application for Constrained Wireless IoT devices (CWIoT)
